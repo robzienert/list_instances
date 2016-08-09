@@ -1,0 +1,25 @@
+language: go
+go:
+- release
+- tip
+before_install:
+- go get github.com/Masterminds/glide
+- go get github.com/mitchellh/gox
+install:
+- glide i
+script:
+- go test -v $(glide nv)
+after_success:
+- gox -osarch="linux/amd64 linux/386 darwin/amd64 windows/386 windows/amd64" -output="{{.Dir}}-$TRAVIS_TAG-{{.OS}}_{{.Arch}}"
+deploy:
+  provider: releases
+  api_key:
+    secure: gu2btBbwmZj/y2rqkbXXd1pemhP/n1MEewFK8VOsMMFJGia1zfwLIfceroSpqvh+Pd04eMDm6vLGrwV5mfI/K2APLajTAWJHr19lhDc3F39ypWBsvfvEXGxprkMf6eYzTXYG7GU6lp+JETjZH32ZKqPeR7inPy22YbMmsjaJYM/KhP3ClNtcGaUIHZMvTYeYyWhRNSh95WsLv1Cc13ZNkwGfQYea23ZW51n3jhCiZ8Yb2u1W5EAwctKLp0w20lrSOb3ppXQK92K+XTVdIEBNyjn/nhnDXstLU61WuPtqfevtypkk2EB7qH77wAEDd8HTtoz93gBC83qJiwdPqhvvqGFN8bHUKxGR2PEYgYyHikqVY6SpRucy/haGbI2Xm9M1aSEOSKl/DiPSdg2wMwdJATQOxFr6+Hi6iwQtME5KH/VubboQZUsMbF+6EbjAPRAyt0j5Wrw8znlEQvtBpgooZV5Xg241QJX9QxxrbxZu5gHAfq0Y9a7UYuH7SRlNCUELhpdQ5Kkp3ZKLAnepj9vL8Q8ZBZjZC3+maj80M3uvn7UCySl3vsmDjNPDBMVcPv0wMJ7wVJa0765fTRkzY62hm0iZcnpYASB1RqUBzufEbPunE28A7v6QjDLdG7qpYAS3HFYAZ8JrO0mWCZztWvftMimSLg4j1o1Ty27Z+H577Qs=
+  file: 
+  - "list_instances-$TRAVIS_TAG-linux_amd64"
+  - "list_instances-$TRAVIS_TAG-linux_386"
+  - "list_instances-$TRAVIS_TAG-darwin_amd64"
+  - "list_instances-$TRAVIS_TAG-windows_amd64"
+  - "list_instances-$TRAVIS_TAG-windows_386"
+  on:
+    repo: zerocontribution/list_instances
