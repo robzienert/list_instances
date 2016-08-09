@@ -9,7 +9,7 @@ install:
 - glide i
 script:
 - go test -v $(glide nv)
-after_success:
+before_deploy:
 - gox -osarch="linux/amd64 linux/386 darwin/amd64 windows/386 windows/amd64" -output="{{.Dir}}-$TRAVIS_TAG-{{.OS}}_{{.Arch}}"
 deploy:
   provider: releases
@@ -19,7 +19,8 @@ deploy:
   - "list_instances-$TRAVIS_TAG-linux_amd64"
   - "list_instances-$TRAVIS_TAG-linux_386"
   - "list_instances-$TRAVIS_TAG-darwin_amd64"
-  - "list_instances-$TRAVIS_TAG-windows_amd64"
-  - "list_instances-$TRAVIS_TAG-windows_386"
+  - "list_instances-$TRAVIS_TAG-windows_amd64.exe"
+  - "list_instances-$TRAVIS_TAG-windows_386.exe"
   on:
     repo: zerocontribution/list_instances
+    tags: true
