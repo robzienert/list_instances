@@ -1,4 +1,4 @@
-package main
+package instances
 
 import (
 	"net"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/olekukonko/tablewriter"
+	"github.com/zerocontribution/list_instances/strutil"
 )
 
 type instance struct {
@@ -26,35 +27,28 @@ func newInstance(i *ec2.Instance) (ret instance) {
 	return ret
 }
 
-func (i *instance) toRow() []string {
+func (i *instance) ToRow() []string {
 	return []string{
 		i.name,
 		*i.InstanceId,
-		stringify(i.PublicIpAddress),
+		strutil.Stringify(i.PublicIpAddress),
 		*i.PrivateIpAddress,
-		stringify(i.KeyName),
+		strutil.Stringify(i.KeyName),
 	}
-}
-
-func stringify(s *string) string {
-	if s == nil {
-		return ""
-	}
-	return *s
 }
 
 type instances []*instance
 
-func (s instances) printTable() {
+func (s instances) PrintTable() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Name", "Id", "PublicIP", "PrivateIP", "Key"})
 	for _, i := range s {
-		table.Append(i.toRow())
+		table.Append(i.ToRow())
 	}
 	table.Render()
 }
 
-func (s instances) sort() {
+func (s instances) Sort() {
 	sort.Sort(s)
 }
 
